@@ -2,11 +2,11 @@ import os
 
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, FSInputFile
+from aiogram.types import Message
 from aiogram.filters import Command
 
 from utils.states.state_find import FindMusic
-from scripts.music import finder_sounds, delete_path_to_audio
+from scripts.music import finder_sounds
 from utils.buttons import find_buttons as fn
 
 
@@ -35,13 +35,12 @@ async def music(message: Message, state: FSMContext) -> None:
           await message.answer('Тех. неполадки у сервиса!')
           return
      
+     
+     
      await message.answer(
           text=f'Вот, что я нашёл по запросу: {message.text}', 
           reply_markup=await fn.button_title(
-               path_to_audio=response[1], 
-               title=response[0]
+               data=response
                )
           )
      await state.clear()
-     
-     await delete_path_to_audio(response[1])

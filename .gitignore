@@ -1,5 +1,6 @@
 main.py
 .env
+audio/
 
 scripts/__pycache__
 

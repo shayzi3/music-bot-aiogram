@@ -5,12 +5,14 @@ from aiogram.filters.callback_data import CallbackData
 
 
 class TitleButton(CallbackData, prefix='path'):
-     path: str
+     clckru: str
      name: str
      
 
-async def button_title(path_to_audio: str, title: str) -> InlineKeyboardBuilder:
+async def button_title(data: list[str]) -> InlineKeyboardBuilder:
      build = InlineKeyboardBuilder()
      
-     build.button(text=title, callback_data=TitleButton(path=path_to_audio, name=title).pack())
+     separator = data[0].replace(':', '_')
+     
+     build.button(text=data[1], callback_data=TitleButton(clckru=separator, name=data[1]).pack())
      return build.as_markup()

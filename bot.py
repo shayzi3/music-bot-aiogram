@@ -7,6 +7,7 @@ from aiogram import Bot, Dispatcher
 
 from callbacks import callback_find
 from handlers.user_commands import start_, find
+from handlers.bot_commands import messages
 
 load_dotenv()
 
@@ -19,7 +20,8 @@ async def main() -> None:
      dp.include_routers(
           callback_find.router,
           start_.router,
-          find.router
+          find.router,
+          messages.router
      )
      
      await bot.delete_webhook(drop_pending_updates=True)
