@@ -5,23 +5,23 @@ from dotenv import load_dotenv
 from loguru import logger
 from aiogram import Bot, Dispatcher
 
-from callbacks import callback_find
-from handlers.user_commands import start_, find
-from handlers.bot_commands import messages
+from handlers.user_commands import start_, find, my_music
+from funcs.database import db
 
 load_dotenv()
 
 async def main() -> None:
      bot = Bot(os.getenv('TOKEN'))
      dp = Dispatcher()
+     base = db.DataBase()
      
      logger.info('Bot ready!')
      
+     await base.db_()
      dp.include_routers(
-          callback_find.router,
           start_.router,
           find.router,
-          messages.router
+          my_music.router
      )
      
      await bot.delete_webhook(drop_pending_updates=True)

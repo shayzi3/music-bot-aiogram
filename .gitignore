@@ -1,6 +1,6 @@
 main.py
 .env
-audio/
+sql.py
 
 scripts/__pycache__
 
@@ -9,6 +9,7 @@ handlers/user_commands/__pycache__
 handlers/admin_commands/__pycache__
 
 
+funcs/__pycache__
 funcs/database/__pycache__
 
 

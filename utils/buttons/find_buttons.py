@@ -4,15 +4,12 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.filters.callback_data import CallbackData
 
 
-class TitleButton(CallbackData, prefix='path'):
-     clckru: str
-     name: str
-     
+class MusicUser(CallbackData, prefix='music'):
+     music: str
 
-async def button_title(data: list[str]) -> InlineKeyboardBuilder:
+
+async def button_add_song(name_audio: str) -> InlineKeyboardBuilder:
      build = InlineKeyboardBuilder()
      
-     separator = data[0].replace(':', '_')
-     
-     build.button(text=data[1], callback_data=TitleButton(clckru=separator, name=data[1]).pack())
+     build.button(text='Добавить ➕', callback_data=MusicUser(music=name_audio).pack())
      return build.as_markup()

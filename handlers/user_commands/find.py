@@ -1,13 +1,15 @@
-import os
 
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.filters import Command
+from aiogram.types.input_file import URLInputFile
 
 from utils.states.state_find import FindMusic
 from scripts.music import finder_sounds
-from utils.buttons import find_buttons as fn
+from utils.buttons import find_buttons as fnd
+
+from funcs.database import db
 
 
 
@@ -26,6 +28,10 @@ async def music(message: Message, state: FSMContext) -> None:
      await state.update_data(music=message.text)
      
      response = await finder_sounds(sing=message.text, id_=message.from_user.id)
+     base = db.DataBase()
+     
+     author_name = f'{response[2].lower().strip().replace(" ", "")}{response[1].lower().strip().replace(" ", "")}'
+     
      
      if isinstance(response, tuple):
           await message.answer('Такой песни не существует!')
@@ -36,11 +42,32 @@ async def music(message: Message, state: FSMContext) -> None:
           return
      
      
-     
-     await message.answer(
-          text=f'Вот, что я нашёл по запросу: {message.text}', 
-          reply_markup=await fn.button_title(
-               data=response
-               )
+     # ? Проверяю, есть ли audio в базе данных, если нет, то отправляю через URLInputFile
+     file_audio = await base.check_music_in_db(music_name=author_name)
+     if not file_audio:
+          file_audio = URLInputFile(
+               url=response[0],
+               timeout=5
           )
+     
+     file_img = URLInputFile(
+          url=response[4],
+          timeout=8
+     )
+     
+     
+     music = await message.answer_audio(
+          audio=file_audio,
+          duration=int(response[3].split(':')[0][-1]) * 60,
+          performer=response[2],
+          title=response[1],
+          thumbnail=file_img,
+          reply_markup=await fnd.button_add_song(name_audio=author_name)
+     )
      await state.clear()
+     
+     # Сохранение в базу данных audio.file_id     
+     data = {
+          author_name: music.audio.file_id
+     }
+     await base.save_music_id(data=data, name=author_name)
