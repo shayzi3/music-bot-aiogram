@@ -6,7 +6,7 @@ from loguru import logger
 from aiogram import Bot, Dispatcher
 
 from handlers.user_commands import start_, find, my_music
-from callbacks import find_callback
+from callbacks import find_callback, music_callback
 from funcs.database import db
 
 load_dotenv()
@@ -23,7 +23,8 @@ async def main() -> None:
           start_.router,
           find.router,
           my_music.router,
-          find_callback.router
+          find_callback.router,
+          music_callback.router
      )
      
      await bot.delete_webhook(drop_pending_updates=True)

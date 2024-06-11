@@ -116,8 +116,34 @@ class DataBase:
                     return await fnd.button_delete_song(name_audio=music_name)
                
                return await fnd.button_add_song(name_audio=music_name)
+          
+          
+     async def music_at_user(self, id: int) -> list[str] | None:
+          async with aiosqlite.connect(self.path_db) as db:
+               response = await self._response_music_user_(db, id)
                
+               if response:
+                    return response
+               
+     
+     async def find_music_about_name(self, musics: list[str]) -> list[str]:
+          async with aiosqlite.connect(self.path_db) as db:
+               response = await self._response_sound_(db)
+               
+               file_id = []
+               for music in musics:
+                    file_id.append(response[music])
+                    
+               return file_id
+          
+          
+     async def file_id_about_name(self, name: str) -> str:
+          async with aiosqlite.connect(self.path_db) as db:
+               response = await self._response_sound_(db)
+               
+               return response[name]
            
+              
                
      async def _response_sound_(self, db: Connection) -> dict:
           response = await db.execute("SELECT sounds FROM sound")

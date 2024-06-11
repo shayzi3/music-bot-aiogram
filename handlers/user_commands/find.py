@@ -31,17 +31,18 @@ async def music(message: Message, state: FSMContext) -> None:
      response = await finder_sounds(sing=message.text, id_=message.from_user.id)
      base = db.DataBase()
      
-     # ? Формирую название для хранения в базе данных
-     author_name = f'{response[2].lower().strip().replace(" ", "")}{response[1].lower().strip().replace(" ", "")}'
      
      if isinstance(response, tuple):
-          await message.answer('Такой песни не существует!')
+          await message.answer('Песня не найдена.')
           return
           
      elif isinstance(response, dict):
           await message.answer('Тех. неполадки у сервиса!')
           return
      
+     
+     # ? Формирую название для хранения в базе данных
+     author_name = f'{response[2].lower().strip().replace(" ", "")}{response[1].lower().strip().replace(" ", "")}'
      
      # ? Проверяю, есть ли audio в базе данных, если нет, то отправляю через URLInputFile
      file_audio = await base.check_music_in_db(music_name=author_name)

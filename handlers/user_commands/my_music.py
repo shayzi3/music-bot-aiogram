@@ -16,8 +16,13 @@ async def my_music(message: Message) -> None:
      base = db.DataBase()
      
      user = await base.music_at_user(id=message.from_user.id)
-     if user:
-          await message.answer(text='Ваша музыка.', reply_markup=await my.button_my_music(music=user))
+     if user:          
+          await message.answer(
+               text='Ваша музыка.',
+               reply_markup=await my.return_my_music(
+                    music_=user
+               )
+          )
           return
-     
+             
      await message.answer(text='У вас нет сохранённой музыки.')
