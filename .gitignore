@@ -8,6 +8,8 @@ scripts/__pycache__
 handlers/user_commands/__pycache__
 handlers/admin_commands/__pycache__
 
+callbacks/__pycache__
+
 
 funcs/__pycache__
 funcs/database/__pycache__

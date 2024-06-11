@@ -4,6 +4,9 @@ import aiosqlite
 
 from loguru import logger
 from aiosqlite import Connection
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+
+from utils.buttons import find_buttons as fnd
 
 
 class DataBase:
@@ -75,7 +78,7 @@ class DataBase:
                
                
                
-     async def check_music_in_db(self, music_name: str, all_: bool = None) -> list[str] | str | None:          
+     async def check_music_in_db(self, music_name: str) -> list[str] | str | None:          
           async with aiosqlite.connect(self.path_db) as db:
                response = await self._response_sound_(db)
                
@@ -84,28 +87,37 @@ class DataBase:
                     
                     
                     
-     async def add_new_music_to_user(self, data: list[str], id: int) -> None:
+     async def add_new_music_to_user(self, id: int, name_music: str) -> None:
           async with aiosqlite.connect(self.path_db) as db:
-               response = await db.execute("SELECT musics FROM userdb WHERE id = ?", [id])
-               response = await response.fetchone()
-               response: list = json.loads(response[0])
+               response = await self._response_music_user_(db, id)
                
-               response.append(data)
+               response.append(name_music)
+               
+               await db.execute("UPDATE userdb SET musics = ? WHERE id = ?", [json.dumps(response), id])
+               await db.commit()
+               
+                              
+     
+     async def delete_music_user(self, id: int, name_music: str) -> None:
+          async with aiosqlite.connect(self.path_db) as db:
+               response = await self._response_music_user_(db, id)
+               
+               response.remove(name_music)               
                
                await db.execute("UPDATE userdb SET musics = ? WHERE id = ?", [json.dumps(response), id])
                await db.commit()
                
                
-               
-     async def music_at_user(self, id: int) -> list[list[str]] | None:
+     async def music_search_add_del(self, id: int, music_name: str) -> InlineKeyboardBuilder:
           async with aiosqlite.connect(self.path_db) as db:
-               user = await db.execute("SELECT musics FROM userdb WHERE id = ?", [id])
-               user = await user.fetchone()
-               user = json.loads(user[0])
+               response = await self._response_music_user_(db, id)
                
-               if user:
-                    return user
+               if music_name in response:
+                    return await fnd.button_delete_song(name_audio=music_name)
                
+               return await fnd.button_add_song(name_audio=music_name)
+               
+           
                
      async def _response_sound_(self, db: Connection) -> dict:
           response = await db.execute("SELECT sounds FROM sound")
@@ -114,6 +126,10 @@ class DataBase:
                
           return response
      
-               
-               
-               
+     
+     async def _response_music_user_(self, db: Connection, id: int) -> list:
+          response = await db.execute("SELECT musics FROM userdb WHERE id = ?", [id])
+          response = await response.fetchone()
+          response: list = json.loads(response[0])
+          
+          return response

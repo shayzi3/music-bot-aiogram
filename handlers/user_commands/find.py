@@ -27,11 +27,12 @@ async def find_music(message: Message, state: FSMContext) -> None:
 async def music(message: Message, state: FSMContext) -> None:
      await state.update_data(music=message.text)
      
+     # ? Ищу песню
      response = await finder_sounds(sing=message.text, id_=message.from_user.id)
      base = db.DataBase()
      
+     # ? Формирую название для хранения в базе данных
      author_name = f'{response[2].lower().strip().replace(" ", "")}{response[1].lower().strip().replace(" ", "")}'
-     
      
      if isinstance(response, tuple):
           await message.answer('Такой песни не существует!')
@@ -47,9 +48,18 @@ async def music(message: Message, state: FSMContext) -> None:
      if not file_audio:
           file_audio = URLInputFile(
                url=response[0],
-               timeout=5
+               timeout=8
           )
+          
+          
+     # ? Проверяю есть ли такая песня у пользователя
+     button_add_del = await base.music_search_add_del(
+          id=message.from_user.id,
+          music_name=author_name
+     )
      
+     
+     # ? Аватар для песни
      file_img = URLInputFile(
           url=response[4],
           timeout=8
@@ -62,11 +72,11 @@ async def music(message: Message, state: FSMContext) -> None:
           performer=response[2],
           title=response[1],
           thumbnail=file_img,
-          reply_markup=await fnd.button_add_song(name_audio=author_name)
+          reply_markup=button_add_del
      )
      await state.clear()
      
-     # Сохранение в базу данных audio.file_id     
+     # ? Сохранение в базу данных audio.file_id     
      data = {
           author_name: music.audio.file_id
      }
