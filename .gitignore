@@ -1,5 +1,5 @@
 main.py
-.env
+main.env
 sql.py
 
 scripts/__pycache__

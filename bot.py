@@ -9,7 +9,7 @@ from handlers.user_commands import start_, find, my_music
 from callbacks import find_callback, music_callback
 from funcs.database import db
 
-load_dotenv()
+load_dotenv(dotenv_path='main.env')
 
 async def main() -> None:
      bot = Bot(os.getenv('TOKEN'))
