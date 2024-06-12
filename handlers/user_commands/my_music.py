@@ -19,10 +19,11 @@ async def my_music(message: Message) -> None:
      if user:          
           await message.answer(
                text='Ваша музыка.',
-               reply_markup=await my.return_my_music(
-                    music_=user
+               reply_markup=await my.return_pages_my_music(
+                    page=0,
+                    data=user
                )
           )
           return
-             
+          
      await message.answer(text='У вас нет сохранённой музыки.')
