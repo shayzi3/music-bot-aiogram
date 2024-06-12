@@ -14,6 +14,11 @@ router = Router()
 async def music_saver(query: CallbackQuery, callback_data: fnd.MusicUserAdd) -> None:
      base = db.DataBase()
      
+     if callback_data.music == 'del_music':
+          await query.message.delete()
+          return
+     
+     
      await base.add_new_music_to_user(
           id=query.from_user.id,
           name_music=callback_data.music
@@ -27,9 +32,14 @@ async def music_saver(query: CallbackQuery, callback_data: fnd.MusicUserAdd) -> 
      await query.answer()
      
      
+     
 @router.callback_query(fnd.MusicUserDel.filter())
 async def music_deleter(query: CallbackQuery, callback_data: fnd.MusicUserDel) -> None:
      base = db.DataBase()
+     
+     if callback_data.music == 'del_music':
+          await query.message.delete()
+          return
      
      await base.delete_music_user(
           id=query.from_user.id,

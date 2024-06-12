@@ -13,7 +13,7 @@ class RightLeft(CallbackData, prefix='pages'):
      page: int
 
 
-async def return_my_music(music_: list[str]) -> list[list[str]]:
+async def return_sorted_my_music(music_: list[str]) -> list[list[str]]:
      '''
      Пример работы фкнкции:
      
@@ -47,7 +47,7 @@ async def return_my_music(music_: list[str]) -> list[list[str]]:
 
 
 async def return_pages_my_music(page: int, data: list[str]) -> InlineKeyboardMarkup:
-     data = await return_my_music(music_=data)
+     data = await return_sorted_my_music(music_=data)
      
      streight = None
      if len(data) > 1:
@@ -73,7 +73,7 @@ async def return_pages_my_music(page: int, data: list[str]) -> InlineKeyboardMar
                     )
                ]
           )
-     if streight:
+     if streight: 
           inline_buttons.append(streight)
      
       

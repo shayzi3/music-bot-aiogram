@@ -37,7 +37,8 @@ class SearchSoups:
 
 
      async def short_music_soup(self, tiny: str) -> str | None:
-          short = pyshorteners.Shortener().clckru.short(tiny)
+          short = pyshorteners.Shortener()
+          url = short.tinyurl.short(tiny)
           
-          return short
+          return url
                

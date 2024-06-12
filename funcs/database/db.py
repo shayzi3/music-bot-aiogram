@@ -13,25 +13,108 @@ class DataBase:
      '''
           Класс содержит функции для работы с базой данных.
           
-          db_(  ) -> None
+          
+          Вид музыки которая передается:  shamanярусский
+          
+          
+          # TODO: db_(  ) -> None
           Создаёт таблицу в базе данных под хранение словаря {название песни: её id}
+          Название таблицы: sound
+          
+          Вид данных:
+          sounds: dict[str, list[str]]
+          
+          sounds - сохраняет полное название трека и id музыки, которую отправляет бот.
+               Чтобы в дальнейшем музыку было легче отправлять.
           
           
-          save_musci_id(  ) -> None
-          Функция добавляет в словарь новое имя и id
+          
+          # TODO: user_db_( id: int ) -> None
+          Сохраняет данные пользователя в таблицу.
+          Название таблицы: 
+          
+          Вид данных:
+          id: int
+          musics: list
+          
+          id - хранение id
+          musics - хранение сохранённой музыки пользователя
           
           
-          check_music_in_db( music_name: str ) -> str | None
+          
+          # TODO: save_musci_id( data: dict, name: str ) -> None
+          Функция добавляет в базу данных словарь с названием музыки и её file_id
+          
+          data: dict - {'названиетрека': file_id}
+          name: str - название музыки(чтобы проверить существует ли уже такая в бд)
+          
+          
+          
+          # TODO: check_music_in_db( music_name: str ) -> str | None
           Если музыка, которую ищет пользователь находится в бд,
           то аудио отправляет по file_id из неё.
           
-          Вид музыки: {'названиепесни': file_id}
+          music_name: str - название музыки
+          
+          
+          
+          # TODO: add_new_music_to_user( id: int, name_music: str ) -> None
+          Сохраняет новую музыку пользователю в список
+          
+          id: int - id пользователя
+          name_music: str - название этой музыки, которую добавляю
+          
+          
+          
+          # TODO: delete_music_user( id: int, name_music: str ) -> None
+          Удаляю музыку у пользователя 
+          
+          id: int - id пользователя
+          name_music: str
+          
+          
+          
+          # TODO: music_search_add_del( id: int, music_name: str ) -> InlineKeyboardBuilder
+          Проверяем есть music_name у пользователя
+          Когда он нажимает на музыку после команды /my или /find, то мы узнаём
+          нужно ли 'Добавить' или 'Удалить' эту музыку.
+          
+          id: int - id пользователя
+          music_name: str - название музыки
+          
+          
+          
+          # TODO: music_at_user( id: int ) -> list[str] | None
+          Возвращаем музыку пользователя
+          
+          id: int - id пользователя
+          
+          
+          
+          # TODO: file_id_about_name( name: str ) -> str
+          Возвращаю file_id по названию музыки чтобы отправить в чат.
+          Применяется в команде /my
+          
+          name: str - название музыки
+          
+          
+          
+          # TODO: _response_sound_( db: Connection ) -> dict   (staticmethod)
+          Возвращаю музыку, которая добавляется в базу данных sound.
+          
+          
+          
+          # TODO: _response_music_user_( db: Connection, id: int ) -> list   (statismethod)
+          Возвращает музыку пользователя
+          
+          id: int - id пользователя
           
           
      '''
      
      def __init__(self) -> None:
           self.path_db = 'funcs/data/music.db'
+     
      
      
      async def db_(self) -> None:
@@ -62,7 +145,7 @@ class DataBase:
                     
                     logger.debug('New user add to db.')
                     return True
-          
+     
      
      
      async def save_music_id(self, data: dict, name: str) -> None:
@@ -91,10 +174,11 @@ class DataBase:
           async with aiosqlite.connect(self.path_db) as db:
                response = await self._response_music_user_(db, id)
                
-               response.append(name_music)
+               if name_music not in response:
+                    response.append(name_music)
                
-               await db.execute("UPDATE userdb SET musics = ? WHERE id = ?", [json.dumps(response), id])
-               await db.commit()
+                    await db.execute("UPDATE userdb SET musics = ? WHERE id = ?", [json.dumps(response), id])
+                    await db.commit()
                
                               
      
@@ -102,10 +186,12 @@ class DataBase:
           async with aiosqlite.connect(self.path_db) as db:
                response = await self._response_music_user_(db, id)
                
-               response.remove(name_music)               
+               if name_music in response:
+                    response.remove(name_music)               
                
-               await db.execute("UPDATE userdb SET musics = ? WHERE id = ?", [json.dumps(response), id])
-               await db.commit()
+                    await db.execute("UPDATE userdb SET musics = ? WHERE id = ?", [json.dumps(response), id])
+                    await db.commit()
+               
                
                
      async def music_search_add_del(self, id: int, music_name: str) -> InlineKeyboardBuilder:
@@ -118,23 +204,14 @@ class DataBase:
                return await fnd.button_add_song(name_audio=music_name)
           
           
+          
      async def music_at_user(self, id: int) -> list[str] | None:
           async with aiosqlite.connect(self.path_db) as db:
                response = await self._response_music_user_(db, id)
                
                if response:
                     return response
-               
-     
-     async def find_music_about_name(self, musics: list[str]) -> list[str]:
-          async with aiosqlite.connect(self.path_db) as db:
-               response = await self._response_sound_(db)
-               
-               file_id = []
-               for music in musics:
-                    file_id.append(response[music])
-                    
-               return file_id
+          
           
           
      async def file_id_about_name(self, name: str) -> str:
@@ -143,9 +220,10 @@ class DataBase:
                
                return response[name]
            
+           
               
-               
-     async def _response_sound_(self, db: Connection) -> dict:
+     @staticmethod
+     async def _response_sound_(db: Connection) -> dict:
           response = await db.execute("SELECT sounds FROM sound")
           response = await response.fetchone()
           response: dict = json.loads(response[0])
@@ -153,7 +231,9 @@ class DataBase:
           return response
      
      
-     async def _response_music_user_(self, db: Connection, id: int) -> list:
+     
+     @staticmethod
+     async def _response_music_user_(db: Connection, id: int) -> list:
           response = await db.execute("SELECT musics FROM userdb WHERE id = ?", [id])
           response = await response.fetchone()
           response: list = json.loads(response[0])

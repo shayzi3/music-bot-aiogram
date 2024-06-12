@@ -1,14 +1,14 @@
+import requests
+
 
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.filters import Command
-from aiogram.types.input_file import URLInputFile
+from aiogram.types.input_file import BufferedInputFile
 
 from utils.states.state_find import FindMusic
 from scripts.music import finder_sounds
-from utils.buttons import find_buttons as fnd
-
 from funcs.database import db
 
 
@@ -42,34 +42,40 @@ async def music(message: Message, state: FSMContext) -> None:
      
      
      # ? Формирую название для хранения в базе данных
-     author_name = f'{response[2].lower().strip().replace(" ", "")}{response[1].lower().strip().replace(" ", "")}'
+     author_name = f'{response[2].lower().replace(" ", "")}{response[1].lower().replace(" ", "")}'
+     
      
      # ? Проверяю, есть ли audio в базе данных, если нет, то отправляю через URLInputFile
      file_audio = await base.check_music_in_db(music_name=author_name)
      if not file_audio:
-          file_audio = URLInputFile(
-               url=response[0],
-               timeout=8
+          file_audio = BufferedInputFile(
+               file=requests.get(response[0]).content,
+               filename='name'
           )
           
-          
+     # ? Аватар для песни
+     file_img = BufferedInputFile(
+          file=requests.get(response[4]).content,
+          filename='name'
+     )     
+     
+     
      # ? Проверяю есть ли такая песня у пользователя
      button_add_del = await base.music_search_add_del(
           id=message.from_user.id,
           music_name=author_name
      )
      
+    
+     seconds = response[3].split(':')[1]
+     if seconds[0] == '0':
+          seconds = seconds[1]
      
-     # ? Аватар для песни
-     file_img = URLInputFile(
-          url=response[4],
-          timeout=8
-     )
-     
+     time = (int(response[3].split(':')[0][-1]) * 60) + int(seconds)
      
      music = await message.answer_audio(
           audio=file_audio,
-          duration=int(response[3].split(':')[0][-1]) * 60,
+          duration=time,
           performer=response[2],
           title=response[1],
           thumbnail=file_img,
