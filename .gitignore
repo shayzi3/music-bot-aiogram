@@ -4,7 +4,7 @@ main.py
 
 scripts/__pycache__
 
-
+bot/__pycache__
 bot/callbacks/__pycache__
 bot/database/__pycache__
 bot/handlers/user_commands/__pycache__
