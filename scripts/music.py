@@ -43,4 +43,4 @@ async def finder_sounds(sing: str, id_: int) -> tuple | dict | list[str]:
                return ()
      else:
           # ? Технические неполадки у сервиса.
-          return {}
+          return {}     

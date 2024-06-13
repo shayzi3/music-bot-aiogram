@@ -32,16 +32,11 @@ async def return_sorted_my_music(music_: list[str]) -> list[list[str]]:
      r = 5
      inline: list[list[str]] = []
      
-     for j in range(once):
-          if j == 0: five = music_[l:r]
+     for _ in range(once):
+          inline.append(music_[l:r])
           
-          else:
-               l += 5
-               r += 5
-               
-               five = music_[l:r]
-               
-          inline.append(five)
+          l += 5
+          r += 5
      return inline
 
 

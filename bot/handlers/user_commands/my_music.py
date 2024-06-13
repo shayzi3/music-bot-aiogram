@@ -4,8 +4,8 @@ from aiogram.types import Message
 from aiogram import Router
 from aiogram.filters import Command
 
-from funcs.database import db
-from utils.buttons import my_music_buttons as my
+from bot.database import db
+from bot.utils.buttons import my_music_buttons as my
 
 
 router = Router()

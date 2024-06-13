@@ -1,6 +1,4 @@
-import asyncio
 import aiohttp
-import pyshorteners
 
 from bs4 import BeautifulSoup
 
@@ -14,14 +12,6 @@ class SearchSoups:
           url - https://rus.hitmotop.com/search?q={песня}
           
           Функция возвращает полный html код страницы
-          
-     
-     short_music_soup( tiny: str )  -> str | None
-     
-          Примеры:
-          tiny - https://rus.hitmotop.com/get/music/20240309/APENT_-_Mozhno_ya_s_tobojj_77552797.mp3
-          
-          Функция вернёт короткую ссылку. Для просто хранения в callback_data
      
      '''
           
@@ -33,12 +23,3 @@ class SearchSoups:
                               
                          return soup
           return None
-
-
-
-     async def short_music_soup(self, tiny: str) -> str | None:
-          short = pyshorteners.Shortener()
-          url = short.tinyurl.short(tiny)
-          
-          return url
-               

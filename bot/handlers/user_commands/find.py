@@ -7,9 +7,9 @@ from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.types.input_file import BufferedInputFile
 
-from utils.states.state_find import FindMusic
+from bot.utils.states.state_find import FindMusic
 from scripts.music import finder_sounds
-from funcs.database import db
+from bot.database import db
 
 
 

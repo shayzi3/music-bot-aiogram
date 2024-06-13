@@ -6,7 +6,7 @@ from loguru import logger
 from aiosqlite import Connection
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from utils.buttons import find_buttons as fnd
+from bot.utils.buttons import find_buttons as find
 
 
 class DataBase:
@@ -199,9 +199,9 @@ class DataBase:
                response = await self._response_music_user_(db, id)
                
                if music_name in response:
-                    return await fnd.button_delete_song(name_audio=music_name)
+                    return await find.button_delete_song(name_audio=music_name)
                
-               return await fnd.button_add_song(name_audio=music_name)
+               return await find.button_add_song(name_audio=music_name)
           
           
           

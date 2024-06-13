@@ -3,15 +3,15 @@
 from aiogram.types import CallbackQuery
 from aiogram import Router
 
-from utils.buttons import find_buttons as fnd
-from funcs.database import db
+from bot.utils.buttons import find_buttons as find
+from bot.database import db
 
 
 router = Router()
 
 
-@router.callback_query(fnd.MusicUserAdd.filter())
-async def music_saver(query: CallbackQuery, callback_data: fnd.MusicUserAdd) -> None:
+@router.callback_query(find.MusicUserAdd.filter())
+async def music_saver(query: CallbackQuery, callback_data: find.MusicUserAdd) -> None:
      base = db.DataBase()
      
      if callback_data.music == 'del_music':
@@ -25,7 +25,7 @@ async def music_saver(query: CallbackQuery, callback_data: fnd.MusicUserAdd) -> 
      )
      
      await query.message.edit_reply_markup(
-          reply_markup=await fnd.button_delete_song(name_audio=callback_data.music)
+          reply_markup=await find.button_delete_song(name_audio=callback_data.music)
      )
      
      await query.message.answer('Песня сохранена успешно.')
@@ -33,8 +33,8 @@ async def music_saver(query: CallbackQuery, callback_data: fnd.MusicUserAdd) -> 
      
      
      
-@router.callback_query(fnd.MusicUserDel.filter())
-async def music_deleter(query: CallbackQuery, callback_data: fnd.MusicUserDel) -> None:
+@router.callback_query(find.MusicUserDel.filter())
+async def music_deleter(query: CallbackQuery, callback_data: find.MusicUserDel) -> None:
      base = db.DataBase()
      
      if callback_data.music == 'del_music':
@@ -47,7 +47,7 @@ async def music_deleter(query: CallbackQuery, callback_data: fnd.MusicUserDel) -
      )
      
      await query.message.edit_reply_markup(
-          reply_markup=await fnd.button_add_song(name_audio=callback_data.music)
+          reply_markup=await find.button_add_song(name_audio=callback_data.music)
      )
      
      await query.message.answer('Песня успешно удалена.')

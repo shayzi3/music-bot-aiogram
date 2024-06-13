@@ -4,7 +4,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message
 from aiogram.enums.parse_mode import ParseMode
 
-from funcs.database import db
+from bot.database import db
 
 
 router = Router()

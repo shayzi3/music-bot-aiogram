@@ -5,9 +5,9 @@ from dotenv import load_dotenv
 from loguru import logger
 from aiogram import Bot, Dispatcher
 
-from handlers.user_commands import start_, find, my_music
-from callbacks import find_callback, music_callback
-from funcs.database import db
+from bot.handlers.user_commands import start_, find, my_music
+from bot.callbacks import find_callback, music_callback
+from bot.database import db
 
 
 load_dotenv(dotenv_path='main.env')
