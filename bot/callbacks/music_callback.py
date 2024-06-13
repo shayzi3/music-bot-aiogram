@@ -16,7 +16,7 @@ async def music_profile(query: CallbackQuery, callback_data: my.MusicName) -> No
      file_id = await base.file_id_about_name(name=callback_data.music)
      
      await query.message.answer_audio(
-          audio=file_id, 
+          audio=file_id[0], 
           reply_markup=await base.music_search_add_del(
                id=query.from_user.id, 
                music_name=callback_data.music

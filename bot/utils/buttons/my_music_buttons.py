@@ -2,6 +2,8 @@
 from aiogram.filters.callback_data import CallbackData
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+from bot.database import db
+
 
 class MusicName(CallbackData, prefix='music_id'):
      music: str
@@ -43,6 +45,7 @@ async def return_sorted_my_music(music_: list[str]) -> list[list[str]]:
 
 async def return_pages_my_music(page: int, data: list[str]) -> InlineKeyboardMarkup:
      data = await return_sorted_my_music(music_=data)
+     base = db.DataBase()
      
      streight = None
      if len(data) > 1:
@@ -60,10 +63,12 @@ async def return_pages_my_music(page: int, data: list[str]) -> InlineKeyboardMar
      
      inline_buttons = []  
      for item in data[page]:
+          file_id = await base.file_id_about_name(name=item)
+          
           inline_buttons.append(
                [
                     InlineKeyboardButton(
-                         text=item,
+                         text=file_id[1],
                          callback_data=MusicName(music=item).pack()
                     )
                ]

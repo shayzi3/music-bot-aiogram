@@ -35,7 +35,7 @@ class DataBase:
           
           Вид данных:
           id: int
-          musics: list
+          musics: list[str]
           
           id - хранение id
           musics - хранение сохранённой музыки пользователя
@@ -143,9 +143,7 @@ class DataBase:
                     await db.execute("INSERT INTO userdb VALUES(?, ?)", [id, json.dumps([])])
                     await db.commit()
                     
-                    logger.debug('New user add to db.')
-                    return True
-     
+                    logger.debug('New user add to db.')     
      
      
      async def save_music_id(self, data: dict, name: str) -> None:
@@ -158,15 +156,6 @@ class DataBase:
                     
                     await db.execute("UPDATE sound SET sounds = ?", [json.dumps(response)])
                     await db.commit()
-               
-               
-               
-     async def check_music_in_db(self, music_name: str) -> list[str] | str | None:          
-          async with aiosqlite.connect(self.path_db) as db:
-               response = await self._response_sound_(db)
-               
-               if music_name in response.keys():
-                    return response[music_name]
                     
                     
                     
@@ -214,13 +203,14 @@ class DataBase:
           
           
           
-     async def file_id_about_name(self, name: str) -> str:
+     async def file_id_about_name(self, name: str) -> list[str]:
           async with aiosqlite.connect(self.path_db) as db:
                response = await self._response_sound_(db)
                
-               return response[name]
+               if name in response.keys():
+                    return response[name]
            
-           
+
               
      @staticmethod
      async def _response_sound_(db: Connection) -> dict:
@@ -233,7 +223,7 @@ class DataBase:
      
      
      @staticmethod
-     async def _response_music_user_(db: Connection, id: int) -> list:
+     async def _response_music_user_(db: Connection, id: int) -> list[str]:
           response = await db.execute("SELECT musics FROM userdb WHERE id = ?", [id])
           response = await response.fetchone()
           response: list = json.loads(response[0])
