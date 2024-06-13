@@ -16,7 +16,7 @@ from bot.database import db
 router = Router()
 
 
-@router.message(Command(commands=['find', 'music', 'fm']))
+@router.message(Command(commands=['find', 'fm']))
 async def find_music(message: Message, state: FSMContext) -> None:
      await state.set_state(FindMusic.music)
      await message.answer('Введите название песни.')
@@ -50,12 +50,15 @@ async def music(message: Message, state: FSMContext) -> None:
      
      
      # ? Проверяю, есть ли audio в базе данных, если нет, то отправляю через URLInputFile
-     file_audio = await base.check_music_in_db(music_name=author_name)
+     file_audio = await base.file_id_about_name(name=author_name)
      if not file_audio:
           file_audio = BufferedInputFile(
                file=requests.get(response[0]).content,
                filename='name'
           )
+          
+     else:
+          file_audio = file_audio[0]
           
      # ? Аватар для песни
      file_img = BufferedInputFile(

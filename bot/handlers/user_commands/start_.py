@@ -5,6 +5,7 @@ from aiogram.types import Message
 from aiogram.enums.parse_mode import ParseMode
 
 from bot.database import db
+from bot.utils.keyboards import start_keyboard as start_keyb
 
 
 router = Router()
@@ -18,4 +19,4 @@ async def start(message: Message) -> None:
      base = db.DataBase()
      
      await base.user_db_(id=message.from_user.id)
-     await message.answer(text, parse_mode=ParseMode.HTML)
+     await message.answer(text, parse_mode=ParseMode.HTML, reply_markup=start_keyb.keyboard)

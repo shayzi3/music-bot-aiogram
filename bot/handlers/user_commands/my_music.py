@@ -11,7 +11,7 @@ from bot.utils.buttons import my_music_buttons as my
 router = Router()
 
 
-@router.message(Command(commands=['my', 'storage']))
+@router.message(Command(commands=['my', 'storage', 'music']))
 async def my_music(message: Message) -> None:
      base = db.DataBase()
      

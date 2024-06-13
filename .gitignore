@@ -10,3 +10,4 @@ bot/database/__pycache__
 bot/handlers/user_commands/__pycache__
 bot/utils/buttons/__pycache__
 bot/utils/states/__pycache__
+bot/utils/keyboards/__pycache__
