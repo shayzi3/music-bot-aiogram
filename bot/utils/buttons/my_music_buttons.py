@@ -55,6 +55,10 @@ async def return_pages_my_music(page: int, data: list[str]) -> InlineKeyboardMar
                     callback_data=RightLeft(action='left', len_data=len(data), page=page).pack()
                ),
                InlineKeyboardButton(
+                    text=f'{page + 1} из {len(data)}',
+                    callback_data=RightLeft(action='pg', len_data=len(data), page=page).pack()
+               ),
+               InlineKeyboardButton(
                     text='→',
                     callback_data=RightLeft(action='right', len_data=len(data), page=page).pack()
                )

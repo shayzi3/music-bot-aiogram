@@ -39,6 +39,10 @@ async def left_right(query: CallbackQuery, callback_data: my.RightLeft) -> None:
                
      elif callback_data.action == 'right':
          page = page + 1 if page != len_data - 1 else 0
+         
+         
+     else:  
+          return
                
      
      user = await base.music_at_user(id=query.from_user.id)
