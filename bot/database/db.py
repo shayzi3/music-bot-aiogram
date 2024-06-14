@@ -113,7 +113,7 @@ class DataBase:
      '''
      
      def __init__(self) -> None:
-          self.path_db = r'C:/Users/dyadh/OneDrive/Рабочий стол/MusicBot/data/music.db'
+          self.path_db = r'/data/music.db'
      
      
      

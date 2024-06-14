@@ -1,7 +1,6 @@
 import asyncio
 import os
 
-from dotenv import load_dotenv
 from loguru import logger
 from aiogram import Bot, Dispatcher
 
@@ -10,11 +9,9 @@ from bot.callbacks import find_callback, music_callback
 from bot.database import db
 
 
-load_dotenv(dotenv_path='main.env')
-
 
 async def main() -> None:
-     bot = Bot(os.getenv('TOKEN'))
+     bot = Bot(os.environ.get('TOKEN'))
      dp = Dispatcher()
      base = db.DataBase()
      
