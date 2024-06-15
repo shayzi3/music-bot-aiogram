@@ -10,9 +10,6 @@ keyboard = ReplyKeyboardMarkup(
                ),
                KeyboardButton(
                     text='/find'
-               ),
-               KeyboardButton(
-                    text='/clear'
                )
           ]
      ],

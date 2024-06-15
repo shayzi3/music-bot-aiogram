@@ -10,8 +10,14 @@ class Reduction:
      
      @staticmethod
      async def reduction(string: str) -> str:
-          while len(string.encode()) >= 64:
-               string = string[:-15]
+          song = 'music_add:' + string
+          
+          while len(song.encode()) > 64:
+               song = song[:-1]
+               
+               string = string[:-1]
+               
+               
                                         
           return string
                     

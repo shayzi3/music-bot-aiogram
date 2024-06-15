@@ -177,10 +177,10 @@ class DataBase:
                
                if name_music in response:
                     response.remove(name_music)               
-               
+                    
                     await db.execute("UPDATE userdb SET musics = ? WHERE id = ?", [json.dumps(response), id])
                     await db.commit()
-               
+                    
                
                
      async def music_search_add_del(self, id: int, music_name: str) -> InlineKeyboardBuilder:
@@ -189,7 +189,7 @@ class DataBase:
                
                if music_name in response:
                     return await find.button_delete_song(name_audio=music_name)
-               
+                    
                return await find.button_add_song(name_audio=music_name)
           
           
@@ -213,9 +213,10 @@ class DataBase:
 
               
      @staticmethod
-     async def _response_sound_(db: Connection) -> dict:
+     async def _response_sound_(db: Connection) -> dict | None:
           response = await db.execute("SELECT sounds FROM sound")
           response = await response.fetchone()
+          
           response: dict = json.loads(response[0])
                
           return response
@@ -223,9 +224,10 @@ class DataBase:
      
      
      @staticmethod
-     async def _response_music_user_(db: Connection, id: int) -> list[str]:
+     async def _response_music_user_(db: Connection, id: int) -> list[str] | None:
           response = await db.execute("SELECT musics FROM userdb WHERE id = ?", [id])
           response = await response.fetchone()
-          response: list = json.loads(response[0])
           
+          response: list = json.loads(response[0])
+               
           return response

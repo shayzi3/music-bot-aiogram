@@ -5,6 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.types.input_file import BufferedInputFile
+from loguru import logger
 
 from bot.utils.states.state_find import FindMusic
 from scripts.music import finder_sounds
@@ -60,6 +61,7 @@ async def music(message: Message, state: FSMContext) -> None:
      else:
           file_audio = file_audio[0]
           
+                    
      # ? Аватар для песни
      file_img = BufferedInputFile(
           file=requests.get(response[4]).content,
